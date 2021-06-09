@@ -11,7 +11,7 @@ class board():
             self.plateau[-self.colonne[col]-1, col-1] = "X"
         if player == "ordi":
             self.plateau[-self.colonne[col]-1, col-1] = "0"
-        self.colonne[col]+=1
+        self.colonne[col] += 1
 
     def consecutif(self, arr, x):
         i = 0
@@ -38,21 +38,25 @@ class board():
         return Loutput
 
     def condWin(self, pos):
+        if pos[0] != 0:
+            pos = [pos[0]+7, pos[1]]
         if pos == [10, 10]:
             return 0
-        pos=[pos[0]+7, pos[1]]
         val = self.plateau[pos[0], pos[1]]
+        if val == " ":
+            return 0
         if list(self.colonne.values()) == [7, 7, 7, 7, 7, 7, 7]:
-            print("Tie!")
+            #print("Tie!")
             self.winner = "Tie"
             return 1
         else:
-            hor = list(self.plateau[pos[0],:])
-            ver = list(self.plateau[:,pos[1]])
+            hor = list(self.plateau[pos[0], :])
+            ver = list(self.plateau[:, pos[1]])
             diag1, diag2 = self.makeDiagonale(pos)
-            if self.consecutif(hor, val) >=4 or self.consecutif(ver, val)>=4 or self.consecutif(diag1, val)>=4 or self.consecutif(diag2, val) >=4:
-                print("Win!!!")
+            if self.consecutif(hor, val) >= 4 or self.consecutif(ver, val) >= 4 or self.consecutif(diag1, val) >= 4 or self.consecutif(diag2, val) >= 4:
+                #print("Win!!!")
                 return 1
+        return 0
 
 
     def makeDiagonale(self, pos):
@@ -114,20 +118,23 @@ class board():
         if score != None:
             newpos=[6-self.colonne[score], score-1]
             self.move(player, score)
-            CW2 = self.condWin([newpos[0]-7,newpos[1]])
+            CW2 = self.condWin([newpos[0]-7, newpos[1]])
             if CW2 == 1:
                 if player == "Player":
-                    self.plateau[newpos[0], newpos[1]] = ''
+                    self.plateau[newpos[0], newpos[1]] = ' '
                     self.colonne[score] -= 1
                     return -100
                 if player == "ordi":
-                    self.plateau[newpos[0], newpos[1]] = ''
+                    self.plateau[newpos[0], newpos[1]] = ' '
                     self.colonne[score] -= 1
                     return 1
+            self.plateau[newpos[0], newpos[1]] = ' '
+            self.colonne[score] -= 1
         return 0
 
     def score(self, player, pos):
-        pos=[pos[0]+7, pos[1]]
+        if pos[0] != 0:
+            pos = [pos[0]+7, pos[1]]
         score = 0
         if player == "Player":
             val = "X"
